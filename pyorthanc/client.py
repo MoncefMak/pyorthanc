@@ -55,7 +55,7 @@ class Orthanc(httpx.Client):
 
     def setup_token(self, token: str) -> None:
         """Set token needed for HTTP requests"""
-        self._auth = httpx.TokenAuth(token)
+        self.headers = {'Authorization': f'Token {token}'}
 
     def _get(self,
              route: str,
