@@ -20,7 +20,14 @@ class AsyncOrthanc(httpx.AsyncClient):
     
     """
 
-    def __init__(self, url: str, username: Optional[str] = None, password: Optional[str] = None, headers: Optional[HeaderTypes] = None):
+    def __init__(
+            self,
+            url: str,
+            username: Optional[str] = None,
+            password: Optional[str] = None,
+            headers: Optional[Union[Dict[str, str], httpx.Headers]] = None,
+            token: Optional[str] = None
+    ) -> None:
         """
         Parameters
         ----------
@@ -35,11 +42,20 @@ class AsyncOrthanc(httpx.AsyncClient):
             self.setup_credentials(username, password)
 
         if headers is not None:
+            if isinstance(headers, dict):
+                headers = httpx.Headers(headers)
             self.headers = headers
+
+        if token:
+            self.setup_token(token)
 
     def setup_credentials(self, username: str, password: str) -> None:
         """Set credentials needed for HTTP requests"""
         self._auth = httpx.BasicAuth(username, password)
+
+    def setup_token(self, token: str) -> None:
+        """Set token needed for HTTP requests"""
+        self._auth = httpx.TokenAuth(token)
 
     async def _get(self,
                    route: str,
