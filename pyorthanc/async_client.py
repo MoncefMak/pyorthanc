@@ -20,6 +20,7 @@ class AsyncOrthanc(httpx.AsyncClient):
 
     """
 
+
     def __init__(
             self,
             url: str,
@@ -45,9 +46,11 @@ class AsyncOrthanc(httpx.AsyncClient):
             if isinstance(headers, dict):
                 headers = httpx.Headers(headers)
             self.headers = headers
+        else:
+            self.headers = httpx.Headers()
 
         if token:
-            self.url += f'?Token={token}'
+            self.headers["Token"] = token
 
     def setup_credentials(self, username: str, password: str) -> None:
         """Set credentials needed for HTTP requests"""
